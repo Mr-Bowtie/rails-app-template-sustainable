@@ -24,6 +24,9 @@ def apply_template!
     gem 'faker'
     gem 'pry-byebug'
   end
+  gem_group :development do
+    gem 'solargraph-rails'
+  end
   gem_group :test do
     gem 'rspec'
     gem 'rspec-rails'
@@ -36,14 +39,21 @@ def apply_template!
   template '.env.test.tt'
   template '.gitignore.tt', force: true
 
-  template 'bin/setup.tt', force: true
-  template 'bin/ci.tt'
+  template 'bin/container_setup.tt', force: true
+  template 'bin/host_setup.tt', force: true
+  template 'bin/ci_local.tt'
   template 'bin/run.tt'
   template 'bin/sql.tt'
   template 'bin/db-migrate.tt'
   template 'bin/db-rollback.tt'
   template 'bin/release.tt'
+  template 'bin/start-dev.tt'
+  template 'bin/start-test.tt'
+  template 'bin/rebuild-image'
+  template 'bin/exec.tt'
   template 'Procfile.tt'
+  template 'Procfile.dev.tt'
+  template '.solargraph.yml.tt'
 
   remove_file 'config/database.yml'
   remove_file 'config/secrets.yml'
@@ -75,12 +85,13 @@ def apply_template!
   copy_file 'lib/generators/service/USAGE'
   copy_file 'lib/generators/service/service_generator.rb'
   copy_file 'lib/generators/service/templates/service.erb'
-  copy_file 'lib/generators/service/templates/service_test.erb'
+  copy_file 'lib/generators/service/templates/service_spec.erb'
   copy_file 'lib/logging/logs.rb'
   copy_file 'lib/rails_ext/active_record_timestamps_uses_timestamp_with_time_zone.rb'
   copy_file 'lib/templates/rails/job/job.rb.tt'
   copy_file 'config/initializers/postgres.rb'
   copy_file 'config/initializers/sidekiq.rb'
+  copy_file 'config/definitions.rb'
 
   insert_into_file 'config/routes.rb',
                    "require \"sidekiq/web\"\n\n",
@@ -101,39 +112,6 @@ def apply_template!
 
   copy_file 'app/jobs/application_job.rb', force: true
   copy_file 'app/services/application_service.rb', force: true
-
-  insert_into_file 'test/test_helper.rb', after: 'require "rails/test_help"' do
-    [
-      '',
-      'require "minitest/autorun"',
-      'require "minitest/reporters"',
-      '',
-      'Minitest::Reporters.use!',
-      'unless ENV["MINITEST_REPORTER"]',
-      '  Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new',
-      'end'
-    ].join("\n")
-  end
-  gsub_file 'test/test_helper.rb',
-            '# Add more helper methods to be used by all tests here...' do
-    [
-      'include FactoryBot::Syntax::Methods',
-      '',
-      '  # Used to indicate assertions that confidence check test',
-      '  # set up conditions',
-      '  def confidence_check(context=nil, &block)',
-      '    block.()',
-      '  rescue Exception',
-      '    puts context.inspect',
-      '    raise',
-      '  end',
-      '',
-      "  # Used inside a test to indicate we haven't implemented it yet",
-      '  def not_implemented!',
-      '    skip("not implemented yet")',
-      '  end'
-    ].join("\n")
-  end
 
   copy_file 'test/lint_factories_test.rb'
 end
