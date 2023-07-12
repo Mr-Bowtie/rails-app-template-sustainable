@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "🚀 rebuilding docker image"
+docker compose build --no-cache
+# vim: ft=bash
