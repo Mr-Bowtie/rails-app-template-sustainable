@@ -14,14 +14,14 @@ class ServiceGenerator < Rails::Generators::NamedBase
     Dir.mkdir(services_dir) unless File.exist?(services_dir)
     Dir.mkdir(new_service_dir) unless File.exist?(new_service_dir)
 
-    tests_dir = 'test/services'
+    tests_dir = 'spec/services'
     new_test_dir = tests_dir + ("/#{@module_name.underscore}" if @module_name.present?).to_s
-    test_file = new_test_dir + "/#{file_name}_test.rb"
+    test_file = new_test_dir + "/#{file_name}_spec.rb"
 
     Dir.mkdir(tests_dir) unless File.exist?(tests_dir)
     Dir.mkdir(new_test_dir) unless File.exist?(new_test_dir)
 
     template 'service.erb', service_file
-    template 'service_test.erb', test_file
+    template 'service_spec.erb', test_file
   end
 end
