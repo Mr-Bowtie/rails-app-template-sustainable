@@ -1,0 +1,20 @@
+require:
+- rubocop-rails
+- rubocop-rspec
+- rubocop-capybara
+- rubocop-factory_bot
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Metrics/MethodLength:
+  Max: 20
+
+Layout/LineLength:
+  Enabled: false

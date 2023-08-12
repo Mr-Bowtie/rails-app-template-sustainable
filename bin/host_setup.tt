@@ -1,10 +1,10 @@
 #!/bin/sh
 
-echo "Setting local bundler path"
+echo "============== Setting local bundler path ==================="
 bundle config set --local path vendor/bundle
-echo "Installing Gems"
+echo "================ Installing Gems ==================="
 bundle install
-echo "parsing gem yard docs"
+echo "================ parsing gem yard docs ==================="
 bundle exec yard gems
-echo "setup RSpec"
+echo "================ setup RSpec ===================="
 bundle exec rails generate rspec:install

@@ -54,18 +54,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: rubocop
+        uses: prozsolt/rubocop-github-action@master
 
       - name: Yarn audit
         uses: pragatheeswarans/yarn-audit-action@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           label: 'audit issues'
-
-      - name: Rubocop
-        uses: gimenete/rubocop-action@1.0
-      
+          
       - name: Brakeman
-        uses: nhattan/brakeman-linter-action@v2.0.0
+        uses: artplan1/brakeman-action@v1.2.1
+        with:
+          flags: "--color"
 
       - name: Bundler Audit
         uses: andrewmcodes/bundler-audit-action@main
+
