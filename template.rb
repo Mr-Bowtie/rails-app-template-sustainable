@@ -78,7 +78,7 @@ def apply_template!
       "      # helpers are global anyway and we don't want",
       '      # a ton of them.',
       '      g.helper false',
-      '      g.test_framework :rspec'
+      '      g.test_framework :rspec',
       '    end'
     ].join("\n") + "\n"
   end
