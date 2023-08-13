@@ -37,6 +37,7 @@ def apply_template!
   template 'README.md.tt', force: true
   remove_file 'README.rdoc'
 
+  template '.env.tt'
   template '.env.development.tt'
   template '.env.test.tt'
   template '.gitignore.tt', force: true
@@ -85,10 +86,18 @@ def apply_template!
 
   remove_file 'db/schema.rb' if File.exist?('db/schema.rb')
 
+  insert_into_file 'config/database.yml', after: 'pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>' do
+    [
+      'host: <%= ENV.fetch("DB_HOST") { "localhost"} %>',
+      'username: <%= ENV.fetch("POSTGRES_USER") { "postgres"} %>',
+      'password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres"} %>'
+    ]
+  end
+
   copy_file 'lib/generators/service/USAGE'
   copy_file 'lib/generators/service/service_generator.rb'
   copy_file 'lib/generators/service/templates/service.erb'
-  copy_file 'lib/generators/service/templates/service_test.erb'
+  copy_file 'lib/generators/service/templates/service_spec.erb'
   copy_file 'lib/logging/logs.rb'
   copy_file 'lib/rails_ext/active_record_timestamps_uses_timestamp_with_time_zone.rb'
   copy_file 'lib/templates/rails/job/job.rb.tt'

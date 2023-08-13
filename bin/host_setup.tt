@@ -8,3 +8,5 @@ echo "================ parsing gem yard docs ==================="
 bundle exec yard gems
 echo "================ setup RSpec ===================="
 bundle exec rails generate rspec:install
+echo "================ setup Annotations ===================="
+bundle exec rails generate annotate:install
